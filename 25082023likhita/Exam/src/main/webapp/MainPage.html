@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Insert title here</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<body>
+	<center>
+    <form>
+        <label>product_id</label>
+        <input type="text" id="pid"><br><br>
+        <label>product_name</label>
+        <input type="text" id="pname"><br><br>
+        <label>category</label>
+        <input type="text" id="cat"><br><br>
+        <label>price</label>
+        <input type="text" id="pri"><br><br>
+        <label>manufacturing_date</label>
+        <input type="date" id="m_date" name="man_date"><br><br>
+        <label>stock quantity</label>
+        <input type="text" id="squa"><br><br>
+        <label>is available</label>
+        <input type="text" id="isa"><br><br>
+        
+        <button id="first" onclick="first()">first</button>
+        <button id="last" onclick="last()">last</button>
+        <button id="next" onclick="next()">next</button>
+        <button id="prev" onclick="prev()">prev</button>
+        
+        <button id="add" onclick="add()">add</button>
+        <button id="edit" onclick="edit()">edit</button>
+        
+        
+        <button id="delete" onclick="delete1()">delete</button>
+        <br><br>
+        <label>search</label>
+        <input type="text" id="ser"><br><br>
+        <button id="ser" onClick="search()">search</button>
+        
+        
+        
+        
+       
+
+       
+    </form>
+
+   </center> 
+    <script>
+        // Your JavaScript code should go here
+        // Define the functions for button clicks (first, last, next, etc.)
+        var y = -1;
+			function pref() {
+				const h = new XMLHttpRequest();
+				var url = "Ser";
+				h.open("GET", url, true);
+				h.onreadystatechange = function () {
+					if (h.status === 200 && h.readyState === 4) {
+						console.log(h.responseText);
+
+						var jsonData = JSON.parse(h.responseText);
+
+						localStorage.setItem("my", JSON.stringify(jsonData));
+						console.log(jsonData);
+
+						console.log("Retrieved JSON array stored in local storage.");
+					}
+				}
+				h.send();
+			}
+			window.onload = pref;
+			
+			function first() {
+				console.log("hi this is first function");
+				var x = localStorage.getItem("my");
+				
+				var da = JSON.parse(x);
+				console.log(da[0].id);
+				y = 0;
+				console.log(da[0]);
+				document.getElementById("pid").value = da[0].id;
+				document.getElementById("pname").value = da[0].name;
+				document.getElementById("cat").value = da[0].cat;
+				document.getElementById("pri").value = da[0].price;
+				document.getElementById("m_date").value = da[0].mdate;
+				document.getElementById("squa").value = da[0].qua;
+				document.getElementById("isa").value = da[0].iavl;
+		
+			}
+			function next() {
+				var x = localStorage.getItem("my");
+				var da = JSON.parse(x);
+				console.log(da[0]);
+				y = (y + 1) % da.length;
+				document.getElementById("pid").value = da[y].id;
+				document.getElementById("pname").value = da[y].name;
+				document.getElementById("cat").value = da[y].cat;
+				document.getElementById("pri").value = da[y].price;
+				document.getElementById("m_date").value = da[y].mdate;
+				document.getElementById("squa").value = da[y].qua;
+				document.getElementById("isa").value = da[y].iavl;
+			}
+			function last() {
+				var x = localStorage.getItem("my");
+				var da = JSON.parse(x);
+				console.log(da[0]);
+				y = da.length - 1;
+				document.getElementById("pid").value = da[y].id;
+				document.getElementById("pname").value = da[y].name;
+				document.getElementById("cat").value = da[y].cat;
+				document.getElementById("pri").value = da[y].price;
+				document.getElementById("m_date").value = da[y].mdate;
+				document.getElementById("squa").value = da[y].qua;
+				document.getElementById("isa").value = da[y].iavl;
+			}
+			function prev() {
+				var x = localStorage.getItem("my");
+				var da = JSON.parse(x);
+				console.log(da[0]);
+				y = (y - 1) % da.length;
+				if (y < 0) y = y + da.length;
+				document.getElementById("pid").value = da[y].id;
+				document.getElementById("pname").value = da[y].name;
+				document.getElementById("cat").value = da[y].cat;
+				document.getElementById("pri").value = da[y].price;
+				document.getElementById("m_date").value = da[y].mdate;
+				document.getElementById("squa").value = da[y].qua;
+				document.getElementById("isa").value = da[y].iavl;
+			}
+			function add(){
+				
+				var a=document.getElementById("pid").value;
+				var b=document.getElementById("pname").value ;
+				var c=document.getElementById("cat").value;
+				 var d=document.getElementById("pri").value ;
+				var e=document.getElementById("m_date").value;
+				var f=document.getElementById("squa").value ;
+				var g=document.getElementById("isa").value ;
+				
+				const h = new XMLHttpRequest();
+
+					var url = "/SerAdd?par1=" + a + "&par2=" + b + "&par3=" + c + "&par4=" + d + "&par5=" + e+"&par6="+f+"&par7="+g;
+					h.open("GET", url, true);
+					h.onreadystatechange = function () {
+						if (h.status === 200 && h.readyState === 4) {
+							console.log("hii" + h.responseText);
+							var jsonData = JSON.parse(h.responseText);
+
+							localStorage.setItem("my", JSON.stringify(jsonData));
+						}
+					}
+					h.send();
+			}
+			function edit(){
+				var a=document.getElementById("pid").value;
+				var b=document.getElementById("pname").value ;
+				var c=document.getElementById("cat").value;
+				 var d=document.getElementById("pri").value ;
+				var e=document.getElementById("m_date").value;
+				var f=document.getElementById("squa").value ;
+				var g=document.getElementById("isa").value ;
+				
+				const h = new XMLHttpRequest();
+
+					var url = "/Seredit?par1=" + a + "&par2=" + b + "&par3=" + c + "&par4=" + d + "&par5=" + e+"&par6="+f+"&par7="+g;
+					h.open("GET", url, true);
+					h.onreadystatechange = function () {
+						if (h.status === 200 && h.readyState === 4) {
+							console.log("hii" + h.responseText);
+							var jsonData = JSON.parse(h.responseText);
+							localStorage.setItem("my", JSON.stringify(jsonData));
+						}
+					}
+					h.send();
+				
+			}
+			function delete1(){
+				var st=document.getElementById("pid").value;
+				var xhr=new XMLHttpRequest();
+				var url="/Serdelete?par1="+st;
+				xhr.open("GET",url,true);
+				console.log(xhr.status);
+				console.log(xhr.readyState);
+				
+				xhr.onreadystatechange=function(){
+					if(xhr.status===200 && xhr.readyState===4 ){
+						console.log("connection established")
+						var jsonData = JSON.parse(xhr.responseText);
+						localStorage.setItem("my", JSON.stringify(jsonData));
+						
+						
+					
+				}
+				};
+				xhr.send();
+				
+			}
+			function search(){
+				var st=document.getElementById("ser").value;
+				var xhr=new XMLHttpRequest();
+				var url="/SerSer?par1="+st;
+				xhr.open("GET",url,true);
+				xhr.onreadystatechange=function(){
+					if(xhr.status===200 && xhr.readyState===4 ){
+						var jsonData = JSON.parse(h.responseText);
+
+						localStorage.setItem("my", JSON.stringify(jsonData));
+						
+					
+					}
+					
+					}
+					xhr.send();
+					
+				
+				
+			}
+    </script>
+</body>
+</html>
